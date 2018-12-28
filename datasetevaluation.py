@@ -6,12 +6,10 @@ from sklearn import model_selection
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score
-from sklearn.linear_model import LogisticRegression, LinearRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.naive_bayes import GaussianNB
-from sklearn.svm import SVC
+from sklearn.neural_network import MLPClassifier
 
 print('Starting PythonMl')
 
@@ -35,12 +33,11 @@ scoring = 'accuracy'
 
 # Spot Check Algorithms
 models = []
-#models.append(('LR', LogisticRegression())) #slow
-models.append(('LDA', LinearDiscriminantAnalysis()))
-models.append(('KNN', KNeighborsClassifier()))
-models.append(('CART', DecisionTreeClassifier())) #best accuracy
-#models.append(('NB', GaussianNB())) #slow
-#models.append(('SVM', SVC())) #slow
+models.append(('KNN', KNeighborsClassifier())) #0.246855 (0.008565)  #best accuracy
+models.append(('CART', DecisionTreeClassifier())) #0.236957 (0.008374)  
+models.append(('Naive Bayes', GaussianNB())) # 0.014738 (0.002504)
+#models.append(('Neural network',MLPClassifier())) #slow
+#models.append(('Neural network',MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1))) #slow
 
 # evaluate each model in turn
 results = []

@@ -4,7 +4,7 @@ import pandas
 print('Starting PythonMl')
 
 names = ['TypicalOrDegraded','Mass','FallObserved','Year','RecLat','RecLong','RecClass']
-dataset = pandas.read_csv('Data/meteorite-landings.csv', names=names)
+dataset = pandas.read_csv('Data/meteorite-landings-evaluation.csv', names=names)
 
 # shape
 print(dataset.shape)
