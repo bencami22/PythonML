@@ -49,3 +49,18 @@ for name, model in models:
 	names.append(name)
 	msg = "%s: %f (%f)" % (name, cv_results.mean(), cv_results.std())
 	print(msg)
+
+# Make predictions on validation dataset
+knn = KNeighborsClassifier()
+knn.fit(X_train, Y_train)
+predictions = knn.predict(X_validation)
+print(f'knn accuracy: {accuracy_score(Y_validation, predictions)}')
+print(f'knn confusion matrix: {confusion_matrix(Y_validation, predictions)}')
+print(f'knn classification report: {classification_report(Y_validation, predictions)}')
+
+nb = GaussianNB()
+nb.fit(X_train, Y_train)
+predictions = nb.predict(X_validation)
+print(f'nb accuracy: {accuracy_score(Y_validation, predictions)}')
+print(f'nb confusion matrix: {confusion_matrix(Y_validation, predictions)}')
+print(f'nb classification report: {classification_report(Y_validation, predictions)}')
