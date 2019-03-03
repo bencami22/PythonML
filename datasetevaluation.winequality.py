@@ -18,26 +18,23 @@ dataset = pandas.read_csv('Data/winequality-red.csv', names=names)
 
 # Split-out validation dataset
 #We will split the loaded dataset into two, 80% of which we will use to train our models and 20% that we will hold back as a validation dataset.
-array = dataset.values
-X = array[:,0:12]
-Y = array[:,11]
-validation_size = 0.20
-seed = 7
+
+X = dataset.drop('quality', axis=1)
+Y = dataset['quality']
+validation_size = 0.2
+seed = 1
 X_train, X_validation, Y_train, Y_validation = model_selection.train_test_split(X, Y, test_size=validation_size, random_state=seed)
 
-#X_train = X_train.astype('float')
-#Y_train = Y_train.astype('float')
-# Test options and evaluation metric
-seed = 7
+# Test options and evaluation metric - see options https://scikit-learn.org/stable/modules/model_evaluation.html
 scoring = 'accuracy'
 
 # Spot Check Algorithms
 models = []
-models.append(('KNN', KNeighborsClassifier())) #0.599692 (0.022750)
-models.append(('CART', DecisionTreeClassifier())) #1.000000 (0.000000)
-models.append(('Naive Bayes', GaussianNB())) # 1.000000 (0.000000)
-models.append(('Neural network',MLPClassifier())) #0.924182 (0.024175)
-models.append(('Neural network',MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1))) #0.526169 (0.111367)
+models.append(('KNN', KNeighborsClassifier())) #0.507450 std: 0.030507
+models.append(('CART', DecisionTreeClassifier())) #0.611491 std: 0.044385
+models.append(('Naive Bayes', GaussianNB())) # 0.532480 std: 0.040657
+models.append(('Neural network', MLPClassifier(max_iter=400))) #0.576224 std: 0.034451
+models.append(('Neural network',MLPClassifier(max_iter=400, solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=seed))) #0.496444 std: 0.061359
 
 # evaluate each model in turn
 results = []
@@ -47,20 +44,13 @@ for name, model in models:
 	cv_results = model_selection.cross_val_score(model, X_train, Y_train, cv=kfold, scoring=scoring)
 	results.append(cv_results)
 	names.append(name)
-	msg = "%s: %f (%f)" % (name, cv_results.mean(), cv_results.std())
+	msg = "%s: mean: %f std: %f" % (name, cv_results.mean(), cv_results.std())
 	print(msg)
 
 # Make predictions on validation dataset
-knn = KNeighborsClassifier()
-knn.fit(X_train, Y_train)
-predictions = knn.predict(X_validation)
-print(f'knn accuracy: {accuracy_score(Y_validation, predictions)}')
-print(f'knn confusion matrix: {confusion_matrix(Y_validation, predictions)}')
-print(f'knn classification report: {classification_report(Y_validation, predictions)}')
-
-nb = GaussianNB()
-nb.fit(X_train, Y_train)
-predictions = nb.predict(X_validation)
-print(f'nb accuracy: {accuracy_score(Y_validation, predictions)}')
-print(f'nb confusion matrix: {confusion_matrix(Y_validation, predictions)}')
-print(f'nb classification report: {classification_report(Y_validation, predictions)}')
+for name, model in models:
+	model.fit(X_train, Y_train)
+	predictions = model.predict(X_validation)
+	print(f'{name} accuracy: {accuracy_score(Y_validation, predictions)}')
+	print(f'{name} confusion matrix: {confusion_matrix(Y_validation, predictions)}')
+	print(f'{name} classification report: {classification_report(Y_validation, predictions)}')
