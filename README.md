@@ -3,7 +3,7 @@ Playground for machine learning using Python (libraries such as scipy, numpy, ma
 
 ```activate meteoriteenv```
 
-Following tutorial https://machinelearningmastery.com/machine-learning-in-python-step-by-step/
+Following tutorial https://machinelearningmastery.com/machine-learning-in-python-step-by-step
 
 Used different datasets:
 
